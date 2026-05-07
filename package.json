@@ -1,0 +1,7 @@
+{
+  "name": "com.lsh.utils",
+  "version": "1.0.0",
+  "displayName": "LSH Utils",
+  "description": "Reusable utility systems for Unity projects",
+  "unity": "6000.0"
+}
