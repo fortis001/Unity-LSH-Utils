@@ -34,6 +34,9 @@ namespace LSH.Utils.Pooling
             instance.transform.SetParent(null);
             instance.gameObject.SetActive(true);
 
+            if (instance is IPoolable poolable)
+                poolable.OnGet();
+
             return instance;
         }
 
@@ -42,6 +45,8 @@ namespace LSH.Utils.Pooling
             if (instance == null)
                 return;
 
+            if (instance is IPoolable poolable)
+                poolable.OnRelease();
 
             instance.gameObject.SetActive(false);
             instance.transform.SetParent(_poolRoot);
@@ -52,6 +57,9 @@ namespace LSH.Utils.Pooling
         private T CreateNew()
         {
             T instance = Object.Instantiate(_prefab, _poolRoot);
+
+            if (instance is IPoolable poolable)
+                poolable.OnCreated();
 
             return instance;
         }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using LSH.Utils.Pooling;
 using UnityEngine;
 
 public class PrefabVariantPool<T> where T : Component
@@ -50,6 +51,9 @@ public class PrefabVariantPool<T> where T : Component
         instance.transform.SetParent(null);
         instance.gameObject.SetActive(true);
 
+        if (instance is IPoolable poolable)
+            poolable.OnGet();
+
         return instance;
     }
 
@@ -63,6 +67,9 @@ public class PrefabVariantPool<T> where T : Component
             Object.Destroy(instance.gameObject);
             return;
         }
+
+        if (instance is IPoolable poolable)
+            poolable.OnRelease();
 
         instance.gameObject.SetActive(false);
         instance.transform.SetParent(_poolRoot);
@@ -85,6 +92,9 @@ public class PrefabVariantPool<T> where T : Component
     {
         T instance = Object.Instantiate(prefab, _poolRoot);
         _originPrefabs[instance] = prefab;
+
+        if (instance is IPoolable poolable)
+            poolable.OnCreated();
 
         return instance;
     }
